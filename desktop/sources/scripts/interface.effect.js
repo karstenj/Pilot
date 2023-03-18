@@ -1,23 +1,21 @@
-import Interface from './interface.js'
+import {Interface, str36} from './interface.js'
 const Tone = require('tone')
 
-export default function EffectInterface (pilot, id, node) {
-  Interface.call(this, pilot, id, node, true)
+export default function EffectInterface (pilot, id, index, node) {
+  Interface.call(this, pilot, `ch${id}`, index, node)
 
-  this.node = node
   if (this.node.wet) {
     this.node.wet.value = 0
   }
 
-  this.el = document.createElement('div')
-  this.el.id = `ch${id}`
   this.el.className = 'effect'
   this.cid_el = document.createElement('span')
   this.cid_el.className = `cid`
   this.val_el = document.createElement('span')
   this.val_el.className = `val`
+  this.index = index
 
-  this.cid_el.innerHTML = `${id}`
+  this.cid_el.innerHTML = `${str36(index)} ${id}`
 
   this.el.appendChild(this.cid_el)
   this.el.appendChild(this.val_el)
@@ -25,15 +23,11 @@ export default function EffectInterface (pilot, id, node) {
   // Run
 
   this.run = function (msg) {
-    if (!msg || msg.substr(0, 3).toLowerCase() !== id) { return }
-
-    if (msg.substr(0, 3).toLowerCase() === id) {
-      this.operate(`${msg}`.substr(3))
-    }
+    this.operate(msg)
   }
 
   this.operate = function (msg) {
-    const data = parse(`${msg}`)
+    const data = parse(msg)
     if (!data) { console.warn(`Unknown data`); return }
     this.setEffect(data)
   }
@@ -69,7 +63,7 @@ export default function EffectInterface (pilot, id, node) {
       } else if (data.code === 'che') {
         this.node.order = clamp(parseInt(data.value * 100), 0, 8)
       } else {
-        console.warn('Unknown value', this.node)
+        console.warn('Unknown value', data.code)
       }
     }
     this.lastEffect = performance.now()
