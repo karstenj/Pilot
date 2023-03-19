@@ -21,6 +21,7 @@ export default function Pilot () {
   this.install = function (host) {
     console.info('Pilot is installing..')
 
+    this.mediaUrl = window.location.origin + window.location.pathname.replace('/Pilot/browser/index.html', '') + '/media'
     this.mixer = new Mixer(this)
     this.listener = new Listener(this)
     this.recorder = new Recorder(this)
