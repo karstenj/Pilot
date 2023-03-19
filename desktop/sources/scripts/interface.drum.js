@@ -6,7 +6,7 @@ export default function DrumInterface (pilot, id, name) {
   this.parts_url = {}
   this.isReady = false
   for (const id in this.parts) {
-    const url = `/media/${name}/${this.parts[id]}.wav`
+    const url = window.location.origin + `/media/${name}/${this.parts[id]}.wav`
     this.parts_url[`${str36(id)}`] = url
   }
   console.log(name, 'Loading Drums..')

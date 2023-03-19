@@ -26,7 +26,7 @@ export default function SampleInterface (pilot, id, node, name) {
   }
 
   this.load = (part) => {
-    const url = `/media/${name}/${part}.wav`
+    const url = window.location.origin + `/media/${name}/${part}.wav`
     var buffer = new Tone.Buffer(url, () => {
       this.buffers[part] = buffer.get()
       this.node.add(part.split('-')[1], this.buffers[part])
